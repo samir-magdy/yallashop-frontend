@@ -139,7 +139,11 @@ export default function ProductPage({ params }: ProductPageProps) {
               <div className="mb-6">
                 <div className="flex items-baseline gap-2">
                   <span className="text-4xl font-bold text-yallashop-navy">
-                    EGP {product.price.toFixed(2)}
+                    EGP{" "}
+                    {product.price.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </span>
                 </div>
                 <p className="text-sm text-gray-600 mt-1">Inclusive of VAT</p>
@@ -147,7 +151,9 @@ export default function ProductPage({ params }: ProductPageProps) {
 
               {/* Description */}
               <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-3">About this item</h2>
+                <h2 className="text-xl text-gray-900 font-semibold mb-3">
+                  About this item
+                </h2>
                 <p className="text-gray-700 leading-relaxed">
                   {product.description}
                 </p>
@@ -299,7 +305,11 @@ export default function ProductPage({ params }: ProductPageProps) {
                       {relatedProduct.title}
                     </h3>
                     <p className="text-lg font-bold text-yallashop-navy">
-                      EGP {relatedProduct.price.toFixed(2)}
+                      EGP{" "}
+                      {relatedProduct.price.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </p>
                   </div>
                 </Link>

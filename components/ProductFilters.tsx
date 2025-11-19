@@ -135,7 +135,7 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
           </div>
           <button
             onClick={handleClearSearch}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors"
           >
             <svg
               className="w-5 h-5"
@@ -167,7 +167,7 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   selectedCategory === cat
                     ? "bg-yallashop-yellow text-yallashop-navy"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
                 {cat}
@@ -181,7 +181,7 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
             <select
               value={priceRange}
               onChange={(e) => setPriceRange(e.target.value)}
-              className="px-4 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-yallashop-yellow"
+              className="px-4 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-yallashop-yellow cursor-pointer"
             >
               <option value="all">All Prices</option>
               <option value="under-1000">Under EGP 1,000</option>
@@ -194,7 +194,7 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-yallashop-yellow"
+              className="cursor-pointer px-4 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-yallashop-yellow"
             >
               <option value="featured">Featured</option>
               <option value="price-low">Price: Low to High</option>

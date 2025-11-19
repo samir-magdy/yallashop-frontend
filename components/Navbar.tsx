@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
@@ -35,10 +35,11 @@ export default function Navbar() {
   useEffect(() => {
     if (searchQuery.trim().length > 1) {
       const filtered = products
-        .filter(p =>
-          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.category.toLowerCase().includes(searchQuery.toLowerCase())
+        .filter(
+          (p) =>
+            p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            p.category.toLowerCase().includes(searchQuery.toLowerCase())
         )
         .slice(0, 8); // Limit to 8 suggestions
       setSuggestions(filtered);
@@ -53,18 +54,22 @@ export default function Navbar() {
   // Click outside to close suggestions
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
         setShowSuggestions(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Handler for selecting a suggestion
   const handleSuggestionClick = (product: Product) => {
-    setSearchQuery(product.title);
+    setSearchQuery("");
     setShowSuggestions(false);
+    setSelectedIndex(-1);
     router.push(`/products/${product.slug}`);
   };
 
@@ -82,7 +87,7 @@ export default function Navbar() {
 
     // If search query is empty, reset to initial state (homepage with all products)
     if (!searchQuery.trim()) {
-      router.push('/');
+      router.push("/");
       return;
     }
 
@@ -93,28 +98,28 @@ export default function Navbar() {
   // Handler for keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!showSuggestions) {
-      if (e.key === 'Enter') {
+      if (e.key === "Enter") {
         handleSearch();
       }
       return;
     }
 
     switch (e.key) {
-      case 'ArrowDown':
+      case "ArrowDown":
         e.preventDefault();
-        setSelectedIndex(prev =>
+        setSelectedIndex((prev) =>
           prev < suggestions.length - 1 ? prev + 1 : prev
         );
         break;
-      case 'ArrowUp':
+      case "ArrowUp":
         e.preventDefault();
-        setSelectedIndex(prev => prev > 0 ? prev - 1 : -1);
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
         break;
-      case 'Enter':
+      case "Enter":
         e.preventDefault();
         handleSearch();
         break;
-      case 'Escape':
+      case "Escape":
         setShowSuggestions(false);
         setSelectedIndex(-1);
         break;
@@ -128,7 +133,9 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
-              <div className="text-3xl font-bold text-yallashop-yellow">yallashop</div>
+              <div className="text-3xl font-bold text-yallashop-yellow">
+                YallaShop
+              </div>
             </Link>
 
             {/* Search Bar - Centered */}
@@ -144,7 +151,7 @@ export default function Navbar() {
                 />
                 <button
                   onClick={handleSearch}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-yallashop-yellow text-yallashop-navy px-4 py-1 rounded-md font-semibold hover:bg-yallashop-yellow-light"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-yallashop-yellow text-yallashop-navy px-4 py-1 rounded-md font-semibold hover:bg-yellow-500"
                 >
                   Search
                 </button>
@@ -158,8 +165,8 @@ export default function Navbar() {
                         onClick={() => handleSuggestionClick(product)}
                         className={`w-full px-4 py-2.5 text-left hover:bg-gray-100 transition-colors ${
                           index === selectedIndex
-                            ? 'bg-yallashop-yellow bg-opacity-20'
-                            : ''
+                            ? "bg-yallashop-yellow bg-opacity-20"
+                            : ""
                         }`}
                       >
                         <p className="text-sm font-medium text-gray-900">
@@ -174,10 +181,7 @@ export default function Navbar() {
 
             {/* Right Side - Cart & User */}
             <div className="flex items-center space-x-6">
-              <Link
-                href="/"
-                className="hidden md:flex items-center space-x-2 text-white hover:text-yallashop-yellow"
-              >
+              <button className="hidden md:flex items-center space-x-2 text-white hover:text-yallashop-yellow cursor-pointer">
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -192,7 +196,7 @@ export default function Navbar() {
                   />
                 </svg>
                 <span className="text-sm">Sign In</span>
-              </Link>
+              </button>
 
               {/* Cart Button */}
               <CartButton />
@@ -226,8 +230,8 @@ export default function Navbar() {
                       onClick={() => handleSuggestionClick(product)}
                       className={`w-full px-4 py-2.5 text-left hover:bg-gray-100 transition-colors ${
                         index === selectedIndex
-                          ? 'bg-yallashop-yellow bg-opacity-20'
-                          : ''
+                          ? "bg-yallashop-yellow bg-opacity-20"
+                          : ""
                       }`}
                     >
                       <p className="text-sm font-medium text-gray-900">

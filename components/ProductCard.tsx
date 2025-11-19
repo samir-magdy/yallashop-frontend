@@ -56,7 +56,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Title */}
         <Link href={`/products/${product.slug}`}>
-          <h3 className="text-sm font-medium text-gray-800 hover:text-yallashop-yellow line-clamp-2 mb-2 h-10">
+          <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-2 h-10">
             {product.title}
           </h3>
         </Link>
@@ -86,7 +86,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="flex items-center justify-between mb-3">
           <div>
             <span className="text-2xl font-bold text-yallashop-navy">
-              EGP {product.price.toFixed(2)}
+              EGP{" "}
+              {product.price.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </span>
           </div>
         </div>

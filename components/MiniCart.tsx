@@ -71,7 +71,7 @@ export default function MiniCart() {
               <p className="text-sm mt-2">Add items to get started</p>
               <button
                 onClick={() => setIsCartOpen(false)}
-                className="mt-4 bg-yallashop-yellow text-yallashop-navy px-6 py-2 rounded-lg font-semibold hover:bg-yallashop-yellow-light"
+                className="mt-4 bg-yallashop-yellow text-yallashop-navy px-6 py-2 rounded-lg font-semibold hover:bg-yellow-500"
               >
                 Continue Shopping
               </button>
@@ -100,7 +100,11 @@ export default function MiniCart() {
                     </Link>
                     <p className="text-xs text-gray-500 mt-1">{item.brand}</p>
                     <p className="text-lg font-bold text-yallashop-navy mt-1">
-                      EGP {item.price.toFixed(2)}
+                      EGP{" "}
+                      {item.price.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </p>
 
                     {/* Quantity Controls */}
@@ -159,10 +163,14 @@ export default function MiniCart() {
             <div className="flex items-center justify-between mb-4">
               <span className="text-lg font-semibold">Subtotal:</span>
               <span className="text-2xl font-bold text-yallashop-navy">
-                EGP {cartTotal.toFixed(2)}
+                EGP{" "}
+                {cartTotal.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </span>
             </div>
-            <button className="w-full bg-yallashop-yellow text-yallashop-navy py-3 rounded-lg font-bold text-lg hover:bg-yallashop-yellow-light mb-2">
+            <button className="w-full bg-yallashop-yellow text-yallashop-navy py-3 rounded-lg font-bold text-lg hover:bg-yellow-500 mb-2">
               Proceed to Checkout
             </button>
             <button
