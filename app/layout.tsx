@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import { FilterProvider } from "@/context/FilterContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -19,9 +20,11 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen flex flex-col bg-gray-50">
         <CartProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <FilterProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </FilterProvider>
         </CartProvider>
       </body>
     </html>

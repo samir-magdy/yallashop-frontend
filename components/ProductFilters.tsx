@@ -2,7 +2,9 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useFilter } from "@/context/FilterContext";
 import ProductCard from "./ProductCard";
+import FilterSidebar from "./FilterSidebar";
 
 interface Product {
   id: string;
@@ -28,6 +30,12 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
   const [sortBy, setSortBy] = useState<string>("featured");
   const [priceRange, setPriceRange] = useState<string>("all");
 
+  // Filter sidebar state (temporary values for mobile)
+  const { isFilterOpen, setIsFilterOpen } = useFilter();
+  const [tempCategory, setTempCategory] = useState<string>("All");
+  const [tempSortBy, setTempSortBy] = useState<string>("featured");
+  const [tempPriceRange, setTempPriceRange] = useState<string>("all");
+
   // Get search query and category from URL parameters
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
@@ -47,6 +55,33 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
       setSelectedCategory("All");
     }
   }, [categoryParam]);
+
+  // Sync temp filters with actual filters when sidebar opens
+  useEffect(() => {
+    if (isFilterOpen) {
+      setTempCategory(selectedCategory);
+      setTempSortBy(sortBy);
+      setTempPriceRange(priceRange);
+    }
+  }, [isFilterOpen, selectedCategory, sortBy, priceRange]);
+
+  // Handler to apply filters from sidebar
+  const handleApplyFilters = () => {
+    setSelectedCategory(tempCategory);
+    setSortBy(tempSortBy);
+    setPriceRange(tempPriceRange);
+    setIsFilterOpen(false);
+  };
+
+  // Handler to reset filters
+  const handleResetFilters = () => {
+    setTempCategory("All");
+    setTempSortBy("featured");
+    setTempPriceRange("all");
+    setSelectedCategory("All");
+    setSortBy("featured");
+    setPriceRange("all");
+  };
 
   // Get unique categories
   const categories = useMemo(() => {
@@ -126,8 +161,127 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
     return filtered;
   }, [products, selectedCategory, sortBy, priceRange, searchQuery]);
 
+  // Check if any filters are active
+  const hasActiveFilters =
+    selectedCategory !== "All" ||
+    priceRange !== "all" ||
+    sortBy !== "featured";
+
+  // Get readable filter labels
+  const getFilterLabel = (type: string, value: string) => {
+    if (type === "category") return value;
+    if (type === "price") {
+      switch (value) {
+        case "under-1000":
+          return "Under 1K";
+        case "1000-10000":
+          return "1K - 10K";
+        case "10000-50000":
+          return "10K - 50K";
+        case "over-50000":
+          return "Over 50K";
+        default:
+          return "";
+      }
+    }
+    if (type === "sort") {
+      switch (value) {
+        case "price-low":
+          return "Price: Low-High";
+        case "price-high":
+          return "Price: High-Low";
+        case "rating":
+          return "Highest Rated";
+        case "name":
+          return "A-Z";
+        default:
+          return "";
+      }
+    }
+    return "";
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <>
+      {/* Active Filters Bar - Mobile Only, Sticky */}
+      {hasActiveFilters && (
+        <div className="md:hidden sticky top-16 z-30 bg-white border-b border-gray-200 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-2 overflow-x-auto">
+            {selectedCategory !== "All" && (
+              <button
+                onClick={() => setSelectedCategory("All")}
+                className="flex items-center gap-1 px-3 py-1.5 bg-yallashop-yellow text-yallashop-navy rounded-full text-sm font-medium whitespace-nowrap"
+              >
+                {getFilterLabel("category", selectedCategory)}
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+            {priceRange !== "all" && (
+              <button
+                onClick={() => setPriceRange("all")}
+                className="flex items-center gap-1 px-3 py-1.5 bg-yallashop-yellow text-yallashop-navy rounded-full text-sm font-medium whitespace-nowrap"
+              >
+                {getFilterLabel("price", priceRange)}
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+            {sortBy !== "featured" && (
+              <button
+                onClick={() => setSortBy("featured")}
+                className="flex items-center gap-1 px-3 py-1.5 bg-yallashop-yellow text-yallashop-navy rounded-full text-sm font-medium whitespace-nowrap"
+              >
+                {getFilterLabel("sort", sortBy)}
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+            <div className="flex-1"></div>
+            <button
+              onClick={handleResetFilters}
+              className="px-4 py-1.5 bg-gray-200 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap hover:bg-gray-300"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Search Results Header */}
       {searchQuery && (
         <div className="mb-6 flex items-start justify-between gap-4">
@@ -160,13 +314,13 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-            Clear Search
+            Reset
           </button>
         </div>
       )}
 
-      {/* Filters Bar */}
-      <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+      {/* Filters Bar - Desktop Only */}
+      <div className="hidden md:block bg-white rounded-lg shadow-md p-4 mb-6">
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           {/* Category Filter */}
           <div className="w-full lg:w-auto">
@@ -296,6 +450,22 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
           ))}
         </div>
       )}
-    </div>
+
+        {/* Filter Sidebar - Mobile Only */}
+        <FilterSidebar
+          isOpen={isFilterOpen}
+          onClose={() => setIsFilterOpen(false)}
+          selectedCategory={tempCategory}
+          sortBy={tempSortBy}
+          priceRange={tempPriceRange}
+          categories={categories}
+          onCategoryChange={setTempCategory}
+          onSortChange={setTempSortBy}
+          onPriceRangeChange={setTempPriceRange}
+          onApply={handleApplyFilters}
+          onReset={handleResetFilters}
+        />
+      </div>
+    </>
   );
 }

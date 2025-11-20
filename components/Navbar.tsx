@@ -2,13 +2,18 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import CartButton from "./CartButton";
+import FilterButton from "./FilterButton";
 import MiniCart from "./MiniCart";
 
 export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Hide filter button on product detail pages
+  const isProductPage = pathname?.startsWith("/products/");
 
   // Handler for search submission
   const handleSearch = (e?: React.FormEvent) => {
@@ -81,6 +86,9 @@ export default function Navbar() {
                 </svg>
                 <span className="text-sm">Sign In</span>
               </button>
+
+              {/* Filter Button (Mobile Only) - Hide on product pages */}
+              {!isProductPage && <FilterButton />}
 
               {/* Cart Button */}
               <CartButton />
