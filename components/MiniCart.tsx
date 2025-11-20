@@ -71,7 +71,7 @@ export default function MiniCart() {
               <p className="text-sm mt-2">Add items to get started</p>
               <button
                 onClick={() => setIsCartOpen(false)}
-                className="mt-4 bg-yallashop-yellow text-yallashop-navy px-6 py-2 rounded-lg font-semibold hover:bg-yellow-500"
+                className="mt-4 bg-yallashop-yellow text-yallashop-navy px-6 py-3 rounded-lg font-semibold hover:bg-yellow-500"
               >
                 Continue Shopping
               </button>
@@ -170,12 +170,12 @@ export default function MiniCart() {
                 })}
               </span>
             </div>
-            <button className="w-full bg-yallashop-yellow text-yallashop-navy py-3 rounded-lg font-bold text-lg hover:bg-yellow-500 mb-2">
+            <button className="w-full bg-yallashop-yellow text-yallashop-navy py-3 rounded-lg font-bold text-lg hover:bg-yellow-500 mb-2 border-2 border-yallashop-yellow">
               Proceed to Checkout
             </button>
             <button
               onClick={() => setIsCartOpen(false)}
-              className="w-full bg-white border-2 border-yallashop-navy text-yallashop-navy py-2 rounded-lg font-semibold hover:bg-gray-50"
+              className="w-full bg-white border-2 border-yallashop-navy text-yallashop-navy py-3 rounded-lg font-bold text-lg hover:bg-gray-50"
             >
               Continue Shopping
             </button>

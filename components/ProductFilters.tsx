@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import ProductCard from "./ProductCard";
 
@@ -28,15 +28,25 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
   const [sortBy, setSortBy] = useState<string>("featured");
   const [priceRange, setPriceRange] = useState<string>("all");
 
-  // Get search query from URL parameters
+  // Get search query and category from URL parameters
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
+  const categoryParam = searchParams.get("category");
   const router = useRouter();
 
   // Handler to clear search and reset to all products
   const handleClearSearch = () => {
     router.push("/");
   };
+
+  // Sync category from URL parameter
+  useEffect(() => {
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    } else {
+      setSelectedCategory("All");
+    }
+  }, [categoryParam]);
 
   // Get unique categories
   const categories = useMemo(() => {
@@ -159,29 +169,59 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
       <div className="bg-white rounded-lg shadow-md p-4 mb-6">
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           {/* Category Filter */}
-          <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  selectedCategory === cat
-                    ? "bg-yallashop-yellow text-yallashop-navy"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+          <div className="w-full lg:w-auto">
+            {/* Mobile: Dropdown */}
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="md:hidden w-full px-4 py-3 rounded-lg border border-gray-300 text-sm font-medium focus:outline-none focus:border-yallashop-yellow cursor-pointer bg-white appearance-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23374151'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "right 0.75rem center",
+                backgroundSize: "1.25rem",
+                paddingRight: "2.5rem",
+              }}
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat === "All" ? "Category" : cat}
+                </option>
+              ))}
+            </select>
+
+            {/* Desktop: Buttons */}
+            <div className="hidden md:flex flex-wrap gap-2">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    selectedCategory === cat
+                      ? "bg-yallashop-yellow text-yallashop-navy"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Sort & Price Filter */}
-          <div className="flex flex-wrap gap-3">
+          <div className="flex gap-3 w-full lg:w-auto">
             {/* Price Range */}
             <select
               value={priceRange}
               onChange={(e) => setPriceRange(e.target.value)}
-              className="px-4 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-yallashop-yellow cursor-pointer"
+              className="w-1/2 md:w-auto px-4 py-3 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-yallashop-yellow cursor-pointer appearance-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23374151'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "right 0.75rem center",
+                backgroundSize: "1.25rem",
+                paddingRight: "2.5rem",
+              }}
             >
               <option value="all">All Prices</option>
               <option value="under-1000">Under EGP 1,000</option>
@@ -194,7 +234,14 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="cursor-pointer px-4 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-yallashop-yellow"
+              className="w-1/2 md:w-auto cursor-pointer px-4 py-3 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-yallashop-yellow appearance-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23374151'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "right 0.75rem center",
+                backgroundSize: "1.25rem",
+                paddingRight: "2.5rem",
+              }}
             >
               <option value="featured">Featured</option>
               <option value="price-low">Price: Low to High</option>
