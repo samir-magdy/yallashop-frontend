@@ -59,7 +59,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             <li>/</li>
             <li>
               <Link
-                href={`/?category=${product.category}`}
+                href={`/?category=${encodeURIComponent(product.category)}`}
                 className="hover:text-yallashop-yellow"
               >
                 {product.category}
