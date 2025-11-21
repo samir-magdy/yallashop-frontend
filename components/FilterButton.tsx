@@ -20,7 +20,7 @@ export default function FilterButton() {
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={2}
-          d="M4 6h16M4 12h16M4 18h16"
+          d="M3 4h18M3 12h12M3 20h6"
         />
       </svg>
     </button>

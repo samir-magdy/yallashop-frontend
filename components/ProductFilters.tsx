@@ -121,21 +121,30 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
 
     // Filter by price range
     if (priceRange !== "all") {
-      switch (priceRange) {
-        case "under-1000":
-          filtered = filtered.filter((p) => p.price < 1000);
-          break;
-        case "1000-10000":
-          filtered = filtered.filter((p) => p.price >= 1000 && p.price < 10000);
-          break;
-        case "10000-50000":
-          filtered = filtered.filter(
-            (p) => p.price >= 10000 && p.price < 50000
-          );
-          break;
-        case "over-50000":
-          filtered = filtered.filter((p) => p.price >= 50000);
-          break;
+      // Handle custom price range format: "custom-min-max"
+      if (priceRange.startsWith("custom-")) {
+        const parts = priceRange.split("-");
+        const min = parseInt(parts[1]);
+        const max = parseInt(parts[2]);
+        filtered = filtered.filter((p) => p.price >= min && p.price <= max);
+      } else {
+        // Handle predefined ranges
+        switch (priceRange) {
+          case "under-1000":
+            filtered = filtered.filter((p) => p.price < 1000);
+            break;
+          case "1000-10000":
+            filtered = filtered.filter((p) => p.price >= 1000 && p.price < 10000);
+            break;
+          case "10000-50000":
+            filtered = filtered.filter(
+              (p) => p.price >= 10000 && p.price < 50000
+            );
+            break;
+          case "over-50000":
+            filtered = filtered.filter((p) => p.price >= 50000);
+            break;
+        }
       }
     }
 
@@ -171,6 +180,18 @@ export default function ProductFilters({ products }: ProductFiltersProps) {
   const getFilterLabel = (type: string, value: string) => {
     if (type === "category") return value;
     if (type === "price") {
+      // Handle custom price range format: "custom-min-max"
+      if (value.startsWith("custom-")) {
+        const parts = value.split("-");
+        const min = parseInt(parts[1]);
+        const max = parseInt(parts[2]);
+        const formatPrice = (price: number) => {
+          if (price >= 1000) return `${(price / 1000).toFixed(0)}K`;
+          return price.toString();
+        };
+        return `EGP ${formatPrice(min)} - ${formatPrice(max)}`;
+      }
+      // Handle predefined ranges
       switch (value) {
         case "under-1000":
           return "Under 1K";
